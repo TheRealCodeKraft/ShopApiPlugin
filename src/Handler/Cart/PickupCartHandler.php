@@ -9,8 +9,8 @@ use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
-use Sylius\ShopApiPlugin\Command\PickupCart;
 use Sylius\ShopApiPlugin\Provider\LoggedInShopUserProviderInterface;
+use Sylius\ShopApiPlugin\Command\Cart\PickupCart;
 use Webmozart\Assert\Assert;
 
 final class PickupCartHandler
@@ -39,7 +39,7 @@ final class PickupCartHandler
         $this->loggedInShopUserProvider = $loggedInShopUserProvider;
     }
 
-    public function handle(PickupCart $pickupCart)
+    public function __invoke(PickupCart $pickupCart): void
     {
         /** @var ChannelInterface|null $channel */
         $channel = $this->channelRepository->findOneByCode($pickupCart->channelCode());

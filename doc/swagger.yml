@@ -449,6 +449,9 @@ paths:
                         $ref: "#/definitions/GeneralError"
                 403:
                     description: "Not logged in or wrong email"
+            security:
+                - {}
+                -   bearerAuth: []
     /{channelCode}/taxon-products-by-slug/{slug}:
         parameters:
             -   $ref: "#/parameters/ChannelCode"
@@ -691,7 +694,7 @@ paths:
                 200:
                     description: "Requested taxon with children."
                     schema:
-                        $ref: "#/definitions/Taxon"
+                        $ref: "#/definitions/TaxonDetails"
     /{channelCode}/request-password-reset:
         parameters:
             -   $ref: "#/parameters/ChannelCode"
@@ -1223,6 +1226,10 @@ definitions:
                     additionalProperties:
                         type: "object"
                         $ref: "#/definitions/Discount"
+            couponCode:
+                description: "Code of the coupon that is associated with this cart"
+                type: "string"
+                example: "LD11FA"
     Item:
         type: "object"
         description: "Item with calculated prices, quantity and related product."
@@ -1711,19 +1718,15 @@ definitions:
                 description: "Date the order was completed in ISO 8601 format."
                 type: "string"
                 format: "date-time"
-                exmple: "2019-02-01T03:00:00+00:00"
             items:
                 type: "array"
                 items:
                     $ref: "#/definitions/Item"
             totals:
-                type: "object"
                 $ref: "#/definitions/TotalsView"
             shippingAddress:
-                type: "object"
                 $ref: "#/definitions/Address"
             billingAddress:
-                type: "object"
                 $ref: "#/definitions/Address"
             payments:
                 type: "array"
@@ -1738,7 +1741,6 @@ definitions:
                 items:
                     type: "object"
                     additionalProperties:
-                        type: "object"
                         $ref: "#/definitions/Discount"
     GeneralError:
         type: "object"
@@ -1757,3 +1759,4 @@ definitions:
                     items:
                         type: "string"
                         example: "sylius.shop_api.additionalProp.not_null"
+
