@@ -39,7 +39,7 @@
                     {
                         "code": "MUG_MATERIAL_CODE",
                         "name": "Becher Material",
-                        "value": "Holz"
+                        "value": "Wood"
                     }
                 ],
                 "associations": [],
@@ -51,7 +51,7 @@
                 ],
                 "_links": {
                     "self": {
-                        "href": "\/shop-api\/WEB_DE\/products-by-slug\/logan-becher"
+                        "href": "\/shop-api\/WEB_DE\/products\/by-slug\/logan-becher"
                     }
                 }
             }

@@ -8,7 +8,7 @@ info:
     license:
         name: "MIT"
         url: "https://opensource.org/licenses/MIT"
-host: "demo.sylius.org"
+host: "demo.sylius.com"
 basePath: "/shop-api"
 consumes:
     - "application/json"
@@ -19,22 +19,22 @@ tags:
         description: "All actions related to cart management."
         externalDocs:
             description: "Find out more"
-            url: "http://docs.sylius.org/en/latest/book/orders/index.html"
+            url: "http://docs.sylius.com/en/latest/book/orders/index.html"
     -   name: "products"
         description: "Show product catalog and add product reviews."
         externalDocs:
             description: "Find out more"
-            url: "http://docs.sylius.org/en/latest/book/products/index.html"
+            url: "http://docs.sylius.com/en/latest/book/products/index.html"
     -   name: "taxons"
         description: "Show taxon tree"
         externalDocs:
             description: "Find out more"
-            url: "http://docs.sylius.org/en/latest/book/products/taxons.html"
+            url: "http://docs.sylius.com/en/latest/book/products/taxons.html"
     -   name: "checkout"
         description: "All actions related to checkout fulfillment. It is important, to execute them in given order (address, choose shipment, choose payment and complete)."
         externalDocs:
             description: "Find out more"
-            url: "http://docs.sylius.org/en/latest/book/orders/checkout.html"
+            url: "http://docs.sylius.com/en/latest/book/orders/checkout.html"
     -   name: "order"
         description: "Showing the order information"
         externalDocs:
@@ -44,7 +44,7 @@ tags:
         description: "All actions related to user functionality."
         externalDocs:
             description: "Find out more"
-            url: "http://docs.sylius.org/en/latest/book/customers/customer_and_shopuser.html"
+            url: "http://docs.sylius.com/en/latest/book/customers/customer_and_shopuser.html"
     -   name: "address"
         description: "All functions related to the Sylius Customer Address Book"
         externalDocs:
@@ -65,6 +65,7 @@ parameters:
         description: "Cart identifier."
         required: true
         type: "string"
+
 paths:
     /{channelCode}/carts:
         parameters:
@@ -88,20 +89,6 @@ paths:
         parameters:
             -   $ref: "#/parameters/ChannelCode"
             -   $ref: "#/parameters/CartToken"
-        post:
-            deprecated: true
-            tags:
-                - "cart"
-            summary: "Pick up your cart from the store"
-            description: "This endpoint will allow you to assign a new cart to the provided token. We recommend using UUID as a token to avoid duplication. If any of previous carts or orders already have the same token value an exception will be thrown."
-            operationId: "deprecatedCartPickUp"
-            responses:
-                201:
-                    description: "Cart has been picked up and assigned to given token"
-                400:
-                    description: "Invalid input"
-                    schema:
-                        $ref: "#/definitions/GeneralError"
         get:
             tags:
                 - "cart"
@@ -452,7 +439,7 @@ paths:
             security:
                 - {}
                 -   bearerAuth: []
-    /{channelCode}/taxon-products-by-slug/{slug}:
+    /{channelCode}/taxon-products/by-slug/{taxonSlug}:
         parameters:
             -   $ref: "#/parameters/ChannelCode"
         get:
@@ -462,7 +449,7 @@ paths:
             description: "This endpoint will return a paginated list of products for given taxon."
             operationId: "productCatalogBySlug"
             parameters:
-                -   name: "slug"
+                -   name: "taxonSlug"
                     in: "path"
                     description: "Slug of taxonomy for which products should be listed."
                     required: true
@@ -487,7 +474,7 @@ paths:
                     description: "Paginated product list."
                     schema:
                         $ref: "#/definitions/ProductsPage"
-    /{channelCode}/taxon-products/{code}:
+    /{channelCode}/taxon-products/by-code/{taxonCode}:
         parameters:
             -   $ref: "#/parameters/ChannelCode"
         get:
@@ -497,7 +484,7 @@ paths:
             description: "This endpoint will return a paginated list of products for given taxon."
             operationId: "productCatalog"
             parameters:
-                -   name: "code"
+                -   name: "taxonCode"
                     in: "path"
                     description: "Code of taxonomy for which products should be listed."
                     required: true
@@ -522,7 +509,7 @@ paths:
                     description: "Paginated product list."
                     schema:
                         $ref: "#/definitions/ProductsPage"
-    /{channelCode}/products-by-slug/{slug}:
+    /{channelCode}/products/by-slug/{slug}:
         parameters:
             -   $ref: "#/parameters/ChannelCode"
         get:
@@ -547,7 +534,7 @@ paths:
                     description: "Show a product with the given slug."
                     schema:
                         $ref: "#/definitions/ProductDetails"
-    /{channelCode}/products/{code}:
+    /{channelCode}/products/by-code/{code}:
         parameters:
             -   $ref: "#/parameters/ChannelCode"
         get:
@@ -572,7 +559,7 @@ paths:
                     description: "Show a product with the given code."
                     schema:
                         $ref: "#/definitions/ProductDetails"
-    /{channelCode}/product-reviews-by-slug/{slug}:
+    /{channelCode}/products/by-slug/{slug}/reviews:
         parameters:
             -   $ref: "#/parameters/ChannelCode"
             -   name: "slug"
@@ -610,7 +597,7 @@ paths:
                     description: "A paginated list of all reviews related to the product identified by slug."
                     schema:
                         $ref: "#/definitions/ProductReviewsPage"
-    /{channelCode}/product/{code}/reviews:
+    /{channelCode}/product/by-code/{code}/reviews:
         parameters:
             -   $ref: "#/parameters/ChannelCode"
             -   name: "code"
@@ -705,9 +692,8 @@ paths:
             description: "Email with reset password path will be sent to user. Default path for password resetting is `/password-reset/{token}`. To change it, you need to override template `@SyliusShopApi\\Email\\passwordReset.html.twig`."
             operationId: "requestPasswordReset"
             parameters:
-                -   name: "email"
+                -   name: "content"
                     in: "body"
-                    description: "Email of user which want to reset password."
                     required: true
                     schema:
                         $ref: "#/definitions/RequestPasswordResetting"
@@ -1120,7 +1106,7 @@ definitions:
                 default: "cart"
                 externalDocs:
                     description: "Find out more about shipment states in the Sylius documentation."
-                    url: "http://docs.sylius.org/en/latest/book/orders/shipments.html#the-shipment-state-machine"
+                    url: "http://docs.sylius.com/en/latest/book/orders/shipments.html#the-shipment-state-machine"
                 enum:
                     - "cart"
                     - "ready"
@@ -1152,7 +1138,7 @@ definitions:
                 default: "cart"
                 externalDocs:
                     description: "Find out more about payment states in the Sylius documentation."
-                    url: "http://docs.sylius.org/en/latest/book/orders/payments.html#payment-state-machine"
+                    url: "http://docs.sylius.com/en/latest/book/orders/payments.html#payment-state-machine"
                 enum:
                     - "cart"
                     - "new"
@@ -1176,7 +1162,7 @@ definitions:
                 example: "WEB_GB"
                 externalDocs:
                     description: "Find out more about channels in the Sylius documentation."
-                    url: "http://docs.sylius.org/en/latest/book/configuration/channels.html"
+                    url: "http://docs.sylius.com/en/latest/book/configuration/channels.html"
             currency:
                 description: "Code of the cart currency according to ISO 4217. This value is inherited from channel"
                 type: "string"
@@ -1191,7 +1177,7 @@ definitions:
                 default: "cart"
                 externalDocs:
                     description: "Find out more about checkout states in the Sylius documentation."
-                    url: "http://docs.sylius.org/en/latest/book/orders/checkout.html#checkout-state-machine"
+                    url: "http://docs.sylius.com/en/latest/book/orders/checkout.html#checkout-state-machine"
                 enum:
                     - "cart"
                     - "addressed"
@@ -1496,6 +1482,12 @@ definitions:
             provinceName:
                 type: "string"
                 example: "Greater London"
+            company:
+                type: "string"
+                example: "Holmes Investigation Service"
+            phoneNumber:
+                type: "string"
+                example: "+490000000000"
     PaymentMethod:
         type: "object"
         properties:
@@ -1693,7 +1685,7 @@ definitions:
                 example: "WEB_GB"
                 externalDocs:
                     description: "Find out more about channels in the Sylius documentation."
-                    url: "http://docs.sylius.org/en/latest/book/configuration/channels.html"
+                    url: "http://docs.sylius.com/en/latest/book/configuration/channels.html"
             currency:
                 description: "Code of the cart currency according to ISO 4217. This value is inherited from channel"
                 type: "string"
@@ -1708,7 +1700,7 @@ definitions:
                 default: "cart"
                 externalDocs:
                     description: "Find out more about checkout states in the Sylius documentation."
-                    url: "http://docs.sylius.org/en/latest/book/orders/checkout.html#checkout-state-machine"
+                    url: "http://docs.sylius.com/en/latest/book/orders/checkout.html#checkout-state-machine"
                 enum:
                     - "cart"
                     - "new"
